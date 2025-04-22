@@ -71,7 +71,7 @@ document.addEventListener('visibilitychange',
 
 // <!-- typed js effect starts -->
 var typed = new Typed(".typing-text", {
-    strings: ["Student"],
+    strings: ["I am a Student"],
     loop: true,
     typeSpeed: 60,
     backSpeed: 30,
@@ -249,3 +249,166 @@ srtop.reveal('.experience .timeline .container', { interval: 400 });
 /* SCROLL CONTACT */
 srtop.reveal('.contact .container', { delay: 400 });
 srtop.reveal('.contact .container .form-group', { delay: 400 });
+
+// Theme Switching Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const themeToggle = document.querySelector('.theme-toggle');
+  const themeIcon = themeToggle.querySelector('i');
+  
+  // Check for saved theme preference
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeIcon(savedTheme);
+
+  // Toggle theme on button click
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+  });
+
+  // Update theme icon based on current theme
+  function updateThemeIcon(theme) {
+    if (theme === 'dark') {
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+    } else {
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+    }
+  }
+});
+
+// Mobile Menu Toggle
+const menuBtn = document.querySelector('#menu');
+const navbar = document.querySelector('.navbar');
+
+menuBtn.addEventListener('click', () => {
+  menuBtn.classList.toggle('fa-times');
+  navbar.classList.toggle('active');
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!navbar.contains(e.target) && !menuBtn.contains(e.target)) {
+    menuBtn.classList.remove('fa-times');
+    navbar.classList.remove('active');
+  }
+});
+
+// Close mobile menu when clicking a nav link
+document.querySelectorAll('.navbar ul li a').forEach(link => {
+  link.addEventListener('click', () => {
+    menuBtn.classList.remove('fa-times');
+    navbar.classList.remove('active');
+  });
+});
+
+// Animate progress circles when they come into view
+const progressCircles = document.querySelectorAll('.progress-circle');
+
+const animateProgress = (entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const circle = entry.target;
+      const percent = circle.getAttribute('data-percent');
+      circle.style.setProperty('--percent', percent);
+      observer.unobserve(circle);
+    }
+  });
+};
+
+const progressObserver = new IntersectionObserver(animateProgress, {
+  threshold: 0.5
+});
+
+progressCircles.forEach(circle => {
+  progressObserver.observe(circle);
+});
+
+// Gallery Lightbox
+const galleryItems = document.querySelectorAll('.gallery-item');
+const lightbox = document.querySelector('.lightbox');
+const lightboxImg = lightbox.querySelector('img');
+const lightboxClose = lightbox.querySelector('.lightbox-close');
+const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+const lightboxNext = lightbox.querySelector('.lightbox-next');
+const lightboxDownload = lightbox.querySelector('.lightbox-download');
+
+let currentImageIndex = 0;
+
+// Open lightbox
+galleryItems.forEach((item, index) => {
+  item.addEventListener('click', () => {
+    currentImageIndex = index;
+    updateLightboxImage();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+// Close lightbox
+lightboxClose.addEventListener('click', () => {
+  lightbox.classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+// Close lightbox when clicking outside
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// Previous image
+lightboxPrev.addEventListener('click', (e) => {
+  e.stopPropagation();
+  currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+  updateLightboxImage();
+});
+
+// Next image
+lightboxNext.addEventListener('click', (e) => {
+  e.stopPropagation();
+  currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+  updateLightboxImage();
+});
+
+// Download image
+lightboxDownload.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const imgSrc = galleryItems[currentImageIndex].querySelector('img').src;
+  const link = document.createElement('a');
+  link.href = imgSrc;
+  link.download = `image-${currentImageIndex + 1}.jpg`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (lightbox.classList.contains('active')) {
+    if (e.key === 'Escape') {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    } else if (e.key === 'ArrowLeft') {
+      currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+      updateLightboxImage();
+    } else if (e.key === 'ArrowRight') {
+      currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+      updateLightboxImage();
+    }
+  }
+});
+
+// Update lightbox image
+function updateLightboxImage() {
+  const imgSrc = galleryItems[currentImageIndex].querySelector('img').src;
+  lightboxImg.src = imgSrc;
+  lightboxImg.alt = `Gallery Image ${currentImageIndex + 1}`;
+}
