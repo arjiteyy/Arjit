@@ -688,7 +688,7 @@ header .logo .flag {
 }
 
 .about .heading span {
-    color: #2196f3;
+    color: var(--primary-color);
 }
 
 .about .row {
@@ -699,12 +699,12 @@ header .logo .flag {
 }
 
 .about .row .image {
-  flex: 1 1 35rem;
+    flex: 1 1 35rem;
     text-align: center;
 }
 
 .about .row .image img {
-  width: 100%;
+    width: 100%;
     max-width: 400px;
     border-radius: 1rem;
     box-shadow: var(--card-shadow);
@@ -732,7 +732,7 @@ header .logo .flag {
     background: var(--primary-color);
     color: var(--light-text);
     border-radius: 50px;
-  font-size: 1.4rem;
+    font-size: 1.4rem;
     margin-bottom: 2rem;
     box-shadow: var(--card-shadow);
 }
@@ -740,7 +740,7 @@ header .logo .flag {
 .about .row .content p {
     font-size: 1.6rem;
     color: var(--text-color);
-    line-height: 2;
+    line-height: 1.8;
     margin-bottom: 2rem;
     text-align: justify;
     word-wrap: break-word;
@@ -778,8 +778,8 @@ header .logo .flag {
 }
 
 .about .row .content .box p span {
-  font-weight: 600;
-    color: #2196f3;
+    font-weight: 600;
+    color: var(--primary-color);
     margin-right: 1rem;
     min-width: 12rem;
 }
@@ -796,7 +796,7 @@ header .logo .flag {
     
     .about .row .content p {
         text-align: justify;
-        line-height: 2.2;
+        line-height: 2;
     }
     
     .about .row .content .box-container {
@@ -879,7 +879,7 @@ header .logo .flag {
 }
 
 [data-theme="dark"] .about .row .content .box p span {
-    color: #2196f3;
+    color: var(--primary-color);
 }
 
 /* Skills Section */
@@ -1834,7 +1834,7 @@ header .logo .flag {
 }
 
 .message textarea {
-  width: 100%;
+    width: 100%;
   height: 200px;
   padding: 1.5rem;
   font-size: 1.4rem;
