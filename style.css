@@ -1143,11 +1143,14 @@ header .logo .flag {
   position: relative;
 }
 
-.education .box .image img {
+.education .box .image img,
+.educare-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  max-height: 300px; /* Adjust as needed */
+  background: #fff;
 }
 
 .education .box:hover .image img {
@@ -2115,6 +2118,14 @@ header .logo .flag {
 
 [data-theme="dark"] .lightbox-content {
   background: var(--card-bg);
+  color: var(--text-color);
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
 }
 
 [data-theme="dark"] .lightbox-close,
@@ -2138,4 +2149,37 @@ header .logo .flag {
   .theme-toggle i {
     font-size: 18px;
   }
+}
+
+/* Ad Popup Modal Styles */
+.ad-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+}
+.ad-modal-content {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.ad-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
 }
