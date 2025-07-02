@@ -332,3 +332,21 @@ function updateLightboxImage() {
   lightboxImg.src = imgSrc;
   lightboxImg.alt = `Gallery Image ${currentImageIndex + 1}`;
 }
+
+// Ad Popup Modal Logic
+window.addEventListener('DOMContentLoaded', function() {
+  var adModal = document.getElementById('ad-modal');
+  var adClose = document.getElementById('ad-modal-close');
+  if (adModal && adClose) {
+    adModal.style.display = 'flex';
+    adClose.onclick = function() {
+      adModal.style.display = 'none';
+    };
+    // Optional: close modal when clicking outside content
+    adModal.onclick = function(e) {
+      if (e.target === adModal) {
+        adModal.style.display = 'none';
+      }
+    };
+  }
+});
