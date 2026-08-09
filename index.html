@@ -3,97 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Ayuu 💖 </title>
+  <title>Happy Birthday Ayuu 💖 | Timi Sadhai Bhari</title>
   <meta name="description" content="A dreamy anti-gravity birthday landing page with automated YouTube soundtrack. Timi sadhai bhari.">
-
-  <!-- =====================================================================
-       CACHE-BUSTING: Prevent browsers (especially Windows Chrome/Edge)
-       from showing stale cached versions of this page.
-       ===================================================================== -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
+  
   <!-- Google Fonts: Great Vibes & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheet – versioned to bust Windows browser cache -->
-  <link rel="stylesheet" href="style.css?v=20260810">
-
-  <style>
-    /* =========================================================
-       MOBILE-FIRST PLAY MUSIC OVERLAY BUTTON
-       Always visible, pulses to grab attention on any device.
-       ========================================================= */
-    #tapToPlayOverlay {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      pointer-events: auto;
-    }
-
-    #tapToPlayBtn {
-      background: linear-gradient(135deg, #ff4d8d 0%, #c084fc 100%);
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 32px;
-      font-size: 1.05rem;
-      font-family: 'Inter', sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      box-shadow: 0 0 24px rgba(255, 77, 141, 0.65), 0 4px 20px rgba(0,0,0,0.35);
-      animation: tapPulse 1.8s ease-in-out infinite;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      white-space: nowrap;
-      transition: transform 0.15s, box-shadow 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    #tapToPlayBtn:active {
-      transform: scale(0.95);
-    }
-
-    #tapToPlayBtn.music-playing {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      box-shadow: 0 0 24px rgba(34, 197, 94, 0.55), 0 4px 20px rgba(0,0,0,0.35);
-      animation: none;
-    }
-
-    #tapToPlayHint {
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.65);
-      font-family: 'Inter', sans-serif;
-      letter-spacing: 0.04em;
-    }
-
-    @keyframes tapPulse {
-      0%   { box-shadow: 0 0 16px rgba(255,77,141,0.5),  0 4px 20px rgba(0,0,0,0.3); transform: translateY(0);   }
-      50%  { box-shadow: 0 0 36px rgba(255,77,141,0.85), 0 4px 20px rgba(0,0,0,0.3); transform: translateY(-4px); }
-      100% { box-shadow: 0 0 16px rgba(255,77,141,0.5),  0 4px 20px rgba(0,0,0,0.3); transform: translateY(0);   }
-    }
-
-    /* On desktop the button is a bit smaller and sits in the corner */
-    @media (min-width: 769px) {
-      #tapToPlayOverlay {
-        bottom: 32px;
-        left: auto;
-        right: 32px;
-        transform: none;
-      }
-    }
-  </style>
+  <!-- External Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -107,22 +26,9 @@
     <div class="orb orb-3"></div>
   </div>
 
-  <!-- ===================================================================
-       FLOATING "TAP TO PLAY MUSIC" BUTTON
-       Visible on ALL devices. On mobile it's at the bottom-center.
-       On desktop it sits bottom-right. Pulsing animation grabs attention.
-       =================================================================== -->
-  <div id="tapToPlayOverlay">
-    <button id="tapToPlayBtn" onclick="handleTapToPlay()" aria-label="Tap to play background music">
-      <span id="tapToPlayIcon">🎵</span>
-      <span id="tapToPlayText">Tap to Play Music</span>
-    </button>
-    <span id="tapToPlayHint">Timi Sadhai Bhari 💖</span>
-  </div>
-
   <!-- Top Floating Controls -->
   <div class="top-controls">
-    <div class="date-text" aria-label="Anniversary date">🎂 11 August 2010</div>
+    <div class="date-text" aria-label="Anniversary date">🎂 10 August 2010</div>
     <button class="music-btn playing" id="musicToggleBtn" onclick="toggleAudioState()" title="Soundtrack Playing">
       <span id="musicIcon">🎶</span>
     </button>
@@ -176,7 +82,7 @@
           <span>Read My Heart</span>
           <span class="pulse-heart">❤️</span>
         </a>
-        <button class="btn-cosmic btn-secondary" onclick="handleTapToPlay()">
+        <button class="btn-cosmic btn-secondary" onclick="toggleAudioState()">
           <span id="heroPlayBtnText">Soundtrack Playing 🎶</span>
         </button>
         <a href="#memories" class="btn-cosmic btn-secondary">
@@ -200,7 +106,7 @@
             <span class="pulse-heart">💖</span>
           </div>
           <h2 class="section-title gradient-text">A Love Letter Written in the Stars</h2>
-          <p class="section-subtitle">For My Dearest Puntu, Mayalu &amp; Ayuu — Timi Sadhai Bhari</p>
+          <p class="section-subtitle">For My Dearest Puntu, Mayalu & Ayuu — Timi Sadhai Bhari</p>
         </div>
 
         <div class="scrollable-letter-box">
@@ -209,7 +115,7 @@
               Happy Birthday to my most beautiful person, my <span class="highlight-gold">Puntu</span>, my <span class="highlight-purple">Mayalu</span>, my <span class="highlight-pink">Ayuu</span>. ❤️🎂
             </p>
             <p>
-              Today is not just your birthday; it's a reminder of how lucky I am that life brought you into mine. I still sometimes think about how everything started back in our school days, when we were just two people who didn't know that one day we would become such an important part of each other's lives. And now, somehow, it has been nearly two beautiful years of us. Nearly two years of memories, silly conversations, little fights, endless teasing, caring for each other, understanding each other, and loving each other in our own special way. ❤️
+              Today is not just your birthday; it’s a reminder of how lucky I am that life brought you into mine. I still sometimes think about how everything started back in our school days, when we were just two people who didn’t know that one day we would become such an important part of each other’s lives. And now, somehow, it has been nearly two beautiful years of us. Nearly two years of memories, silly conversations, little fights, endless teasing, caring for each other, understanding each other, and loving each other in our own special way. ❤️
             </p>
             <p>
               Ayuu, you have become so much more than just my girlfriend. You are the person I look for when I want to share something, the person who can make my worst days feel a little lighter, and the person whose happiness genuinely matters to me. You have a special place in my heart that nobody else could ever take. No matter how much I try to explain what you mean to me, words will always feel too small.
@@ -221,22 +127,22 @@
               My Puntu, I want you to know that I am genuinely proud of you. I have watched you grow, and I hope I can continue watching you become the amazing person you are meant to be. You have your dreams, your studies, your future, and so many beautiful things waiting for you. I may not be able to solve every problem you face, but I promise that whenever you need someone, I will always want to be that person for you.
             </p>
             <p>
-              On your birthday, I don't just wish you happiness for today. I wish you a life full of reasons to smile. I wish you success in everything you work hard for. I wish you confidence when you doubt yourself, strength when things become difficult, and people around you who genuinely appreciate the beautiful heart you have. I hope every dream you have slowly becomes reality. And more than anything, I hope you never forget how special you are.
+              On your birthday, I don’t just wish you happiness for today. I wish you a life full of reasons to smile. I wish you success in everything you work hard for. I wish you confidence when you doubt yourself, strength when things become difficult, and people around you who genuinely appreciate the beautiful heart you have. I hope every dream you have slowly becomes reality. And more than anything, I hope you never forget how special you are.
             </p>
             <p>
               And yes, I hope I get to be beside you for many of those future birthdays too. ❤️
             </p>
             <p>
-              We have already spent nearly two years together, but I don't want our story to be measured only by the time that has passed. I want it to be measured by all the memories we have made and all the memories we still have to create. We have grown from school-day kids into two people with bigger dreams and bigger responsibilities, but I hope no matter how much life changes, we never forget the little version of us who first started this journey.
+              We have already spent nearly two years together, but I don’t want our story to be measured only by the time that has passed. I want it to be measured by all the memories we have made and all the memories we still have to create. We have grown from school-day kids into two people with bigger dreams and bigger responsibilities, but I hope no matter how much life changes, we never forget the little version of us who first started this journey.
             </p>
             <p>
-              There will probably be more distance, more busy days, more misunderstandings, more arguments, and moments when things aren't perfect. But I don't expect our relationship to be perfect. I just want it to be real. I want us to keep choosing each other, keep understanding each other, keep talking, keep growing, and keep making memories together.
+              There will probably be more distance, more busy days, more misunderstandings, more arguments, and moments when things aren’t perfect. But I don’t expect our relationship to be perfect. I just want it to be real. I want us to keep choosing each other, keep understanding each other, keep talking, keep growing, and keep making memories together.
             </p>
             <p>
               My Mayalu, thank you for every smile you have given me, every moment you have stayed, every little thing you have done for me, every time you have understood me, and even every little fight that somehow became another memory of us. Thank you for being you. ❤️
             </p>
             <p>
-              I hope when you read this, you smile even a little. And if you don't, then I'm definitely going to blame you because I tried my best. 😂❤️
+              I hope when you read this, you smile even a little. And if you don’t, then I’m definitely going to blame you because I tried my best. 😂❤️
             </p>
             <p>
               Happy Birthday once again, my Puntu, my Mayalu, my Ayuu. 🥹❤️🎂
@@ -260,13 +166,13 @@
               I love you, Ayuu. ❤️🥺
             </p>
             <p>
-              And here's to us — to the memories behind us, the distance between us, and all the beautiful moments waiting ahead of us.
+              And here’s to us — to the memories behind us, the distance between us, and all the beautiful moments waiting ahead of us.
             </p>
             <p>
               Happy Birthday, my beautiful girl. ❤️🎂🫶🏻
             </p>
             <div class="letter-signature">
-              Forever &amp; Always Yours,<br>
+              Forever & Always Yours,<br>
               <span class="sig-name">Floating in Love ✨</span>
             </div>
           </div>
@@ -281,23 +187,28 @@
           <span class="music-card-icon">🎧</span>
           <div>
             <h3 class="music-card-title gradient-text">Our Special Soundtrack</h3>
-            <p class="music-card-subtitle">Timi Sadhai Bhari 💖 | Cross-Device Autoplay</p>
+            <p class="music-card-subtitle">Timi Sadhai Bhari 💖 | Forced YouTube Autoplay</p>
           </div>
         </div>
         
         <!-- YouTube IFrame Player Box -->
         <div class="yt-embed-box">
-          <!-- The div#yt-player is replaced by the YouTube IFrame API -->
-          <div id="yt-player"></div>
+          <iframe 
+            id="yt-player" 
+            src="https://www.youtube.com/embed/T36r-O5k8Tc?autoplay=1&mute=1&loop=1&playlist=T36r-O5k8Tc&enablejsapi=1&controls=1&modestbranding=1" 
+            allow="autoplay; encrypted-media; picture-in-picture" 
+            allowfullscreen
+            title="Timi Sadhai Bhari Soundtrack">
+          </iframe>
         </div>
 
         <div class="music-player-controls">
-          <button class="btn-cosmic" onclick="handleTapToPlay()" id="sectionPlayBtn">
+          <button class="btn-cosmic" onclick="toggleAudioState()">
             <span id="bannerPlayIcon">🎶</span>
-            <span id="bannerPlayText">Play Soundtrack</span>
+            <span id="bannerPlayText">Toggle Soundtrack</span>
           </button>
           <div class="volume-status" id="volumeStatus">
-            <span>🎵 Ready to Play</span>
+            <span>🔊 Soundtrack Active</span>
           </div>
         </div>
       </div>
@@ -307,7 +218,7 @@
     <section class="gallery-section" id="memories">
       <div class="gallery-header">
         <h2 class="section-title gradient-text">Zero-Gravity Memories 📸</h2>
-        <p class="section-subtitle">Moments Frozen in Space &amp; Time</p>
+        <p class="section-subtitle">Moments Frozen in Space & Time</p>
       </div>
 
       <div class="gallery-grid">
@@ -336,7 +247,7 @@
           <div class="polaroid-img-wrapper">
             <img src="p4.jpeg" alt="Memory 4" class="polaroid-img">
           </div>
-          <div class="polaroid-caption">Warmth &amp; Sunshine 👑</div>
+          <div class="polaroid-caption">Warmth & Sunshine 👑</div>
         </div>
 
         <div class="polaroid-card float-medium" onclick="openLightbox('p5.jpeg', 'Forever anchored to your loving heart ⚓')">
@@ -456,7 +367,7 @@
         <span class="pulse-heart">❤️</span>
       </div>
       <p class="footer-text" style="font-size: 0.9rem; color: var(--text-40);">
-        Floating in space &amp; time, forever and always.
+        Floating in space & time, forever and always.
       </p>
     </footer>
 
@@ -471,13 +382,9 @@
     </div>
   </div>
 
-  <!-- =====================================================================
-       YouTube IFrame API – cache-busted so browsers always fetch fresh.
-       ===================================================================== -->
-  <script src="https://www.youtube.com/iframe_api?v=20260810"></script>
-
-  <!-- Main Application Script – versioned to bust Windows browser cache -->
-  <script src="index.js?v=20260810"></script>
-
+  <!-- YouTube IFrame API Script -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <!-- Main Application Script -->
+  <script src="index.js"></script>
 </body>
 </html>

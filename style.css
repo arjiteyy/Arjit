@@ -148,13 +148,10 @@ body {
   background: #000;
 }
 
-.yt-embed-box iframe,
-.yt-embed-box #yt-player,
-.yt-embed-box #yt-player iframe {
+.yt-embed-box iframe {
   width: 100%;
   height: 100%;
   border: none;
-  display: block;
 }
 
 /* Keep the soundtrack playing without taking over the page. */
