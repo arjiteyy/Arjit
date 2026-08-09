@@ -54,6 +54,197 @@ window.onYouTubeIframeAPIReady = function () {
   createYouTubePlayer();
 };
 
+function createMobilePlayOverlay() {
+  // Remove existing overlay if any
+  const existingOverlay = document.getElementById('mobilePlayOverlay');
+  if (existingOverlay) existingOverlay.remove();
+  
+  // Create overlay for both mobile and desktop
+  const overlay = document.createElement('div');
+  overlay.id = 'mobilePlayOverlay';
+  overlay.style.cssText = `
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: linear-gradient(135deg, rgba(255, 126, 179, 0.95), rgba(192, 132, 252, 0.95));
+    color: white;
+    padding: 18px 30px;
+    border-radius: 50px;
+    font-family: 'Georgia', serif;
+    font-size: ${isMobile ? '18px' : '16px'};
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(255, 126, 179, 0.5);
+    animation: pulseGlow 2s infinite;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    max-width: 90%;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  `;
+  
+  // Different text for mobile vs desktop
+  if (isMobile) {
+    overlay.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+        <span style="font-size: 28px;">🎵</span>
+        <div>
+          <div style="font-size: 20px; margin-bottom: 4px;">Tap to Play Music</div>
+          <div style="font-size: 12px; opacity: 0.8; font-weight: normal;">🎶 Romantic Birthday Song</div>
+        </div>
+      </div>
+    `;
+  } else {
+    overlay.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+        <span style="font-size: 24px;">🎵</span>
+        <div>
+          <div style="font-size: 18px; margin-bottom: 2px;">Click to Play Music</div>
+          <div style="font-size: 12px; opacity: 0.8; font-weight: normal;">🎶 Romantic Birthday Song</div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Hover effects
+  overlay.addEventListener('mouseenter', () => {
+    overlay.style.transform = 'translateX(-50%) scale(1.05)';
+    overlay.style.boxShadow = '0 12px 40px rgba(255, 126, 179, 0.7)';
+  });
+  
+  overlay.addEventListener('mouseleave', () => {
+    overlay.style.transform = 'translateX(-50%) scale(1)';
+    overlay.style.boxShadow = '0 8px 32px rgba(255, 126, 179, 0.5)';
+  });
+  
+  // Click handler
+  overlay.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (youtubePlayer) {
+      youtubePlayer.unMute();
+      youtubePlayer.setVolume(100);
+      youtubePlayer.playVideo();
+      updateAudioUi(true);
+      isUserInteracted = true;
+      this.style.display = 'none';
+      
+      // Show success feedback
+      showToastNotification('🎵 Music is now playing!', 'success');
+    } else {
+      showToastNotification('⏳ Loading music player...', 'info');
+      // Retry after a moment
+      setTimeout(() => {
+        if (youtubePlayer) {
+          youtubePlayer.unMute();
+          youtubePlayer.setVolume(100);
+          youtubePlayer.playVideo();
+          updateAudioUi(true);
+          isUserInteracted = true;
+          this.style.display = 'none';
+          showToastNotification('🎵 Music is now playing!', 'success');
+        }
+      }, 1000);
+    }
+  });
+  
+  document.body.appendChild(overlay);
+  
+  // Add pulse animation
+  const style = document.createElement('style');
+  style.id = 'pulseStyle';
+  if (!document.getElementById('pulseStyle')) {
+    style.textContent = `
+      @keyframes pulseGlow {
+        0%, 100% { 
+          transform: translateX(-50%) scale(1);
+          box-shadow: 0 8px 32px rgba(255, 126, 179, 0.5);
+        }
+        50% { 
+          transform: translateX(-50%) scale(1.03);
+          box-shadow: 0 12px 48px rgba(255, 126, 179, 0.8);
+        }
+      }
+      
+      @keyframes slideUp {
+        from {
+          transform: translateY(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      #mobilePlayOverlay {
+        animation: slideUp 0.8s ease-out, pulseGlow 2s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+function hideMobileOverlay() {
+  const overlay = document.getElementById('mobilePlayOverlay');
+  if (overlay) {
+    overlay.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    overlay.style.opacity = '0';
+    overlay.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 500);
+  }
+}
+
+function showToastNotification(message, type = 'info') {
+  // Remove existing toast
+  const existingToast = document.getElementById('toastNotification');
+  if (existingToast) existingToast.remove();
+  
+  const toast = document.createElement('div');
+  toast.id = 'toastNotification';
+  const colors = {
+    success: 'rgba(76, 175, 80, 0.95)',
+    info: 'rgba(33, 150, 243, 0.95)',
+    error: 'rgba(244, 67, 54, 0.95)'
+  };
+  
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 180px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1002;
+    background: ${colors[type] || colors.info};
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: slideUp 0.5s ease-out;
+    max-width: 90%;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  // Auto remove after 3 seconds
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+    setTimeout(() => {
+      toast.remove();
+    }, 500);
+  }, 3000);
+}
+
 function createYouTubePlayer() {
   if (youtubePlayer) {
     console.log('[Birthday] Player already created – skipping');
@@ -324,8 +515,10 @@ gestureEvents.forEach(ev =>
 );
 
 /* ==========================================================================
-   2. SPACE CANVAS PARTICLE ENGINE & FLOATING HEARTS
+   2. SPACE CANVAS PARTICLE ENGINE & FLOATING HEARTS (unchanged)
    ========================================================================== */
+// ... (rest of your existing code remains the same)
+
 let canvas, ctx;
 let width, height;
 const particleCount = window.innerWidth < 600 ? 70 : 120;
@@ -483,7 +676,7 @@ function animateSpaceCanvas() {
 }
 
 /* ==========================================================================
-   3. CANDLE BLOW OUT & LIGHTBOX
+   3. CANDLE BLOW OUT & LIGHTBOX (unchanged)
    ========================================================================== */
 function blowCandle() {
   const flame      = document.getElementById('candleFlame');
