@@ -2,19 +2,218 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Ayuu 💖 | Timi Sadhai Bhari</title>
-  <meta name="description" content="A dreamy anti-gravity birthday landing page with automated YouTube soundtrack. Timi sadhai bhari.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- Google Fonts: Great Vibes & Inter -->
+  <title>Happy Birthday Ayuu 💖 | Timi Sadhai Bhari</title>
+  <meta name="description" content="A dreamy anti-gravity birthday landing page. Timi sadhai bhari.">
+
+  <!-- ===== FORCE NO CACHE ON ALL DEVICES ===== -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- ===== MOBILE SPECIFIC ===== -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <!-- ===== FORCE RELOAD ON MOBILE ===== -->
+  <script>
+      (function() {
+          const VERSION = '20260810';
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+          
+          if (isMobile) {
+              // Check stored version
+              const stored = localStorage.getItem('version');
+              if (stored !== VERSION) {
+                  localStorage.setItem('version', VERSION);
+                  // Clear all caches
+                  sessionStorage.clear();
+                  // Force reload
+                  location.reload(true);
+              }
+              
+              // Prevent back/forward cache
+              window.addEventListener('pageshow', function(e) {
+                  if (e.persisted) {
+                      location.reload();
+                  }
+              });
+          }
+      })();
+  </script>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Stylesheet (versioned to bust cache) -->
+  <link rel="stylesheet" href="style.css?v=20260810">
+
+  <style>
+    /* =====================================================================
+       FLOATING MUSIC PLAYER WIDGET
+       Fixed bottom-center on mobile, bottom-right on desktop.
+       ===================================================================== */
+    #musicWidget {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    #musicWidgetCard {
+      background: rgba(18, 8, 35, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 126, 179, 0.35);
+      border-radius: 60px;
+      padding: 10px 20px 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 0 28px rgba(255, 77, 141, 0.4), 0 8px 32px rgba(0,0,0,0.5);
+      min-width: 220px;
+    }
+
+    /* Pulsing album art disc */
+    #musicDisc {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4d8d, #c084fc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(255, 77, 141, 0.6);
+      transition: animation 0.3s;
+    }
+    #musicDisc.spinning {
+      animation: discSpin 4s linear infinite;
+    }
+    @keyframes discSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    #musicInfo {
+      flex: 1;
+      min-width: 0;
+    }
+    #musicTitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.02em;
+    }
+    #musicSubtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.55);
+      white-space: nowrap;
+    }
+
+    #musicPlayPauseBtn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #ff4d8d, #c084fc);
+      color: #fff;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(255, 77, 141, 0.5);
+      transition: transform 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      animation: widgetPulse 2s ease-in-out infinite;
+    }
+    #musicPlayPauseBtn.playing {
+      animation: none;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+    }
+    #musicPlayPauseBtn:active {
+      transform: scale(0.9);
+    }
+    @keyframes widgetPulse {
+      0%,100% { box-shadow: 0 0 10px rgba(255,77,141,0.4); }
+      50%      { box-shadow: 0 0 22px rgba(255,77,141,0.85); }
+    }
+
+    /* ---- progress bar ---- */
+    #musicProgress {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+    #musicProgressBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff4d8d, #c084fc);
+      border-radius: 2px;
+      transition: width 0.5s linear;
+    }
+
+    /* Desktop: pin to bottom-right */
+    @media (min-width: 769px) {
+      #musicWidget {
+        left: auto;
+        right: 28px;
+        bottom: 28px;
+        transform: none;
+        align-items: flex-end;
+      }
+    }
+
+    /* ---- "Tap to start music" first-visit hint ---- */
+    #musicHint {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.04em;
+      text-align: center;
+      transition: opacity 0.4s;
+    }
+    #musicHint.hidden { opacity: 0; pointer-events: none; }
+
+    /* Hide the native audio element visually but keep it in the DOM */
+    #bgAudio { display: none; }
+  </style>
 </head>
 <body>
+  <p style="display:none">Version: 20260810</p>
+
+  <!-- =====================================================================
+       HTML5 AUDIO ELEMENT  –  put your MP3 file named "music.mp3"
+       in the same folder as index.html, then push to GitHub.
+       ===================================================================== -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+    <source src="music.ogg" type="audio/ogg">
+    <!-- Fallback message (never seen, element is hidden) -->
+    Your browser does not support HTML5 audio.
+  </audio>
 
   <!-- Background Space Canvas -->
   <canvas id="space-canvas"></canvas>
@@ -26,15 +225,31 @@
     <div class="orb orb-3"></div>
   </div>
 
+  <!-- =====================================================================
+       FLOATING MUSIC PLAYER WIDGET  –  always visible on all devices
+       ===================================================================== -->
+  <div id="musicWidget">
+    <div id="musicWidgetCard">
+      <div id="musicDisc">🎵</div>
+      <div id="musicInfo">
+        <div id="musicTitle">Timi Sadhai Bhari 💖</div>
+        <div id="musicSubtitle" id="musicSubtitle">Tap ▶ to start music</div>
+        <div id="musicProgress"><div id="musicProgressBar"></div></div>
+      </div>
+      <button id="musicPlayPauseBtn" onclick="toggleAudio()" aria-label="Play or pause music">▶</button>
+    </div>
+    <span id="musicHint">🎵 Tap to play the birthday song</span>
+  </div>
+
   <!-- Top Floating Controls -->
   <div class="top-controls">
     <div class="date-text" aria-label="Anniversary date">🎂 11 August 2010</div>
     <button class="music-btn playing" id="musicToggleBtn" onclick="toggleAudioState()" title="Soundtrack Playing">
       <span id="musicIcon">🎶</span>
     </button>
-    <div class="music-badge" id="musicBadge" onclick="toggleAudioState()">
+    <div class="music-badge" id="musicBadge" onclick="toggleAudio()">
       <span class="music-dot"></span>
-      <span id="musicStatusText">Timi Sadhai Bhari 💖 (Autoplay)</span>
+      <span id="musicStatusText">Timi Sadhai Bhari 💖</span>
     </div>
   </div>
 
@@ -57,7 +272,6 @@
         <span class="floating-badge">🌸 Mayalu</span>
         <span class="floating-badge">✨ Ayuu</span>
       </div>
-
       <div class="hero-badges-container hero-badges-right float-medium" aria-label="Right nickname badges">
         <span class="floating-badge">✨ Timi Sadhai Bhari</span>
         <span class="floating-badge">🪐 Mero Universe</span>
@@ -67,11 +281,12 @@
       <div class="hero-center-stage">
         <p class="hero-greeting">Dearest Ayuu...</p>
         <figure class="hero-memory-frame">
-          <img src="pic10.jpeg" alt="A beautiful zero-gravity memory of Ayuu" class="hero-memory-image">
-          <figcaption>✨ Zero Gravity Memories ✨</figcaption>
+          <div class="hero-memory-image" style="display:flex;align-items:center;justify-content:center;font-size:5rem;background:linear-gradient(135deg,rgba(255,126,179,0.18),rgba(192,132,252,0.18));border-radius:50%;width:200px;height:200px;margin:0 auto;">💖</div>
+          <figcaption>✨ Add Your Photo Here ✨</figcaption>
         </figure>
         <h1 class="hero-title gradient-text">Happy Birthday, My Love</h1>
       </div>
+
       <p class="hero-subtitle">
         Floating through an endless space of stars, anchored only to your heart.<br>
         <span class="timi-highlight">Timi sadhai bhari mero man ma.</span>
@@ -82,8 +297,8 @@
           <span>Read My Heart</span>
           <span class="pulse-heart">❤️</span>
         </a>
-        <button class="btn-cosmic btn-secondary" onclick="toggleAudioState()">
-          <span id="heroPlayBtnText">Soundtrack Playing 🎶</span>
+        <button class="btn-cosmic btn-secondary" onclick="toggleAudio()">
+          <span id="heroPlayBtnText">🎵 Play Soundtrack</span>
         </button>
         <a href="#memories" class="btn-cosmic btn-secondary">
           <span>Explore Memories ✨</span>
@@ -91,9 +306,7 @@
       </div>
 
       <a href="#letter" class="scroll-indicator">
-        <div class="scroll-mouse">
-          <div class="scroll-wheel"></div>
-        </div>
+        <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
         <span>Scroll Down</span>
       </a>
     </header>
@@ -102,113 +315,34 @@
     <section class="letter-section" id="letter">
       <div class="glass-card letter-card float-slow">
         <div class="letter-header">
-          <div class="letter-icon">
-            <span class="pulse-heart">💖</span>
-          </div>
+          <div class="letter-icon"><span class="pulse-heart">💖</span></div>
           <h2 class="section-title gradient-text">A Love Letter Written in the Stars</h2>
-          <p class="section-subtitle">For My Dearest Puntu, Mayalu & Ayuu — Timi Sadhai Bhari</p>
+          <p class="section-subtitle">For My Dearest Puntu, Mayalu &amp; Ayuu — Timi Sadhai Bhari</p>
         </div>
-
         <div class="scrollable-letter-box">
           <div class="letter-body">
-            <p>
-              Happy Birthday to my most beautiful person, my <span class="highlight-gold">Puntu</span>, my <span class="highlight-purple">Mayalu</span>, my <span class="highlight-pink">Ayuu</span>. ❤️🎂
-            </p>
-            <p>
-              Today is not just your birthday; it’s a reminder of how lucky I am that life brought you into mine. I still sometimes think about how everything started back in our school days, when we were just two people who didn’t know that one day we would become such an important part of each other’s lives. And now, somehow, it has been nearly two beautiful years of us. Nearly two years of memories, silly conversations, little fights, endless teasing, caring for each other, understanding each other, and loving each other in our own special way. ❤️
-            </p>
-            <p>
-              Ayuu, you have become so much more than just my girlfriend. You are the person I look for when I want to share something, the person who can make my worst days feel a little lighter, and the person whose happiness genuinely matters to me. You have a special place in my heart that nobody else could ever take. No matter how much I try to explain what you mean to me, words will always feel too small.
-            </p>
-            <p>
-              But even with the distance, one thing has never changed — you are still close to my heart. Maybe we cannot meet whenever we want, maybe we cannot spend every special moment together, but somehow you are still a part of my every day. I carry our memories with me everywhere. And honestly, sometimes even the smallest things remind me of you.
-            </p>
-            <p>
-              My Puntu, I want you to know that I am genuinely proud of you. I have watched you grow, and I hope I can continue watching you become the amazing person you are meant to be. You have your dreams, your studies, your future, and so many beautiful things waiting for you. I may not be able to solve every problem you face, but I promise that whenever you need someone, I will always want to be that person for you.
-            </p>
-            <p>
-              On your birthday, I don’t just wish you happiness for today. I wish you a life full of reasons to smile. I wish you success in everything you work hard for. I wish you confidence when you doubt yourself, strength when things become difficult, and people around you who genuinely appreciate the beautiful heart you have. I hope every dream you have slowly becomes reality. And more than anything, I hope you never forget how special you are.
-            </p>
-            <p>
-              And yes, I hope I get to be beside you for many of those future birthdays too. ❤️
-            </p>
-            <p>
-              We have already spent nearly two years together, but I don’t want our story to be measured only by the time that has passed. I want it to be measured by all the memories we have made and all the memories we still have to create. We have grown from school-day kids into two people with bigger dreams and bigger responsibilities, but I hope no matter how much life changes, we never forget the little version of us who first started this journey.
-            </p>
-            <p>
-              There will probably be more distance, more busy days, more misunderstandings, more arguments, and moments when things aren’t perfect. But I don’t expect our relationship to be perfect. I just want it to be real. I want us to keep choosing each other, keep understanding each other, keep talking, keep growing, and keep making memories together.
-            </p>
-            <p>
-              My Mayalu, thank you for every smile you have given me, every moment you have stayed, every little thing you have done for me, every time you have understood me, and even every little fight that somehow became another memory of us. Thank you for being you. ❤️
-            </p>
-            <p>
-              I hope when you read this, you smile even a little. And if you don’t, then I’m definitely going to blame you because I tried my best. 😂❤️
-            </p>
-            <p>
-              Happy Birthday once again, my Puntu, my Mayalu, my Ayuu. 🥹❤️🎂
-            </p>
-            <p>
-              Distance may keep us apart physically right now, but it can never erase everything we have shared. No matter how far you are, you will always have a very special place in my heart.
-            </p>
-            <p>
-              Keep smiling that beautiful smile.<br>
-              Keep chasing your dreams.<br>
-              Keep being the amazing girl you are.<br>
-              And please remember that somewhere, there is someone who is always going to be cheering for you, missing you, caring about you, and loving you more than these words can ever explain.
-            </p>
-            <p>
-              Happy Birthday, my love. ❤️<br>
-              I hope this new year of your life brings you everything your heart deserves.
-            </p>
-            <p>
-              I love you, Puntu.<br>
-              I love you, Mayalu.<br>
-              I love you, Ayuu. ❤️🥺
-            </p>
-            <p>
-              And here’s to us — to the memories behind us, the distance between us, and all the beautiful moments waiting ahead of us.
-            </p>
-            <p>
-              Happy Birthday, my beautiful girl. ❤️🎂🫶🏻
-            </p>
+            <p>Happy Birthday to my most beautiful person, my <span class="highlight-gold">Puntu</span>, my <span class="highlight-purple">Mayalu</span>, my <span class="highlight-pink">Ayuu</span>. ❤️🎂</p>
+            <p>Today is not just your birthday; it's a reminder of how lucky I am that life brought you into mine. I still sometimes think about how everything started back in our school days, when we were just two people who didn't know that one day we would become such an important part of each other's lives. And now, somehow, it has been nearly two beautiful years of us. Nearly two years of memories, silly conversations, little fights, endless teasing, caring for each other, understanding each other, and loving each other in our own special way. ❤️</p>
+            <p>Ayuu, you have become so much more than just my girlfriend. You are the person I look for when I want to share something, the person who can make my worst days feel a little lighter, and the person whose happiness genuinely matters to me. You have a special place in my heart that nobody else could ever take. No matter how much I try to explain what you mean to me, words will always feel too small.</p>
+            <p>But even with the distance, one thing has never changed — you are still close to my heart. Maybe we cannot meet whenever we want, maybe we cannot spend every special moment together, but somehow you are still a part of my every day. I carry our memories with me everywhere. And honestly, sometimes even the smallest things remind me of you.</p>
+            <p>My Puntu, I want you to know that I am genuinely proud of you. I have watched you grow, and I hope I can continue watching you become the amazing person you are meant to be. You have your dreams, your studies, your future, and so many beautiful things waiting for you. I may not be able to solve every problem you face, but I promise that whenever you need someone, I will always want to be that person for you.</p>
+            <p>On your birthday, I don't just wish you happiness for today. I wish you a life full of reasons to smile. I wish you success in everything you work hard for. I wish you confidence when you doubt yourself, strength when things become difficult, and people around you who genuinely appreciate the beautiful heart you have. I hope every dream you have slowly becomes reality. And more than anything, I hope you never forget how special you are.</p>
+            <p>And yes, I hope I get to be beside you for many of those future birthdays too. ❤️</p>
+            <p>We have already spent nearly two years together, but I don't want our story to be measured only by the time that has passed. I want it to be measured by all the memories we have made and all the memories we still have to create. We have grown from school-day kids into two people with bigger dreams and bigger responsibilities, but I hope no matter how much life changes, we never forget the little version of us who first started this journey.</p>
+            <p>There will probably be more distance, more busy days, more misunderstandings, more arguments, and moments when things aren't perfect. But I don't expect our relationship to be perfect. I just want it to be real. I want us to keep choosing each other, keep understanding each other, keep talking, keep growing, and keep making memories together.</p>
+            <p>My Mayalu, thank you for every smile you have given me, every moment you have stayed, every little thing you have done for me, every time you have understood me, and even every little fight that somehow became another memory of us. Thank you for being you. ❤️</p>
+            <p>I hope when you read this, you smile even a little. And if you don't, then I'm definitely going to blame you because I tried my best. 😂❤️</p>
+            <p>Happy Birthday once again, my Puntu, my Mayalu, my Ayuu. 🥹❤️🎂</p>
+            <p>Distance may keep us apart physically right now, but it can never erase everything we have shared. No matter how far you are, you will always have a very special place in my heart.</p>
+            <p>Keep smiling that beautiful smile.<br>Keep chasing your dreams.<br>Keep being the amazing girl you are.<br>And please remember that somewhere, there is someone who is always going to be cheering for you, missing you, caring about you, and loving you more than these words can ever explain.</p>
+            <p>Happy Birthday, my love. ❤️<br>I hope this new year of your life brings you everything your heart deserves.</p>
+            <p>I love you, Puntu.<br>I love you, Mayalu.<br>I love you, Ayuu. ❤️🥺</p>
+            <p>And here's to us — to the memories behind us, the distance between us, and all the beautiful moments waiting ahead of us.</p>
+            <p>Happy Birthday, my beautiful girl. ❤️🎂🫶🏻</p>
             <div class="letter-signature">
-              Forever & Always Yours,<br>
+              Forever &amp; Always Yours,<br>
               <span class="sig-name">Floating in Love ✨</span>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SOUNDTRACK SECTION (FORCED YOUTUBE PLAYER) -->
-    <section class="music-section" id="soundtrack">
-      <div class="glass-card music-card float-medium">
-        <div class="music-card-header">
-          <span class="music-card-icon">🎧</span>
-          <div>
-            <h3 class="music-card-title gradient-text">Our Special Soundtrack</h3>
-            <p class="music-card-subtitle">Timi Sadhai Bhari 💖 | Forced YouTube Autoplay</p>
-          </div>
-        </div>
-        
-        <!-- YouTube IFrame Player Box -->
-        <div class="yt-embed-box">
-          <iframe 
-            id="yt-player" 
-            src="https://www.youtube.com/embed/T36r-O5k8Tc?autoplay=1&mute=1&loop=1&playlist=T36r-O5k8Tc&enablejsapi=1&controls=1&modestbranding=1" 
-            allow="autoplay; encrypted-media; picture-in-picture" 
-            allowfullscreen
-            title="Timi Sadhai Bhari Soundtrack">
-          </iframe>
-        </div>
-
-        <div class="music-player-controls">
-          <button class="btn-cosmic" onclick="toggleAudioState()">
-            <span id="bannerPlayIcon">🎶</span>
-            <span id="bannerPlayText">Toggle Soundtrack</span>
-          </button>
-          <div class="volume-status" id="volumeStatus">
-            <span>🔊 Soundtrack Active</span>
           </div>
         </div>
       </div>
@@ -218,70 +352,45 @@
     <section class="gallery-section" id="memories">
       <div class="gallery-header">
         <h2 class="section-title gradient-text">Zero-Gravity Memories 📸</h2>
-        <p class="section-subtitle">Moments Frozen in Space & Time</p>
+        <p class="section-subtitle">Moments Frozen in Space &amp; Time</p>
       </div>
 
+      <!-- 📸 Add your new photos: name them p1.jpeg … p9.jpeg and push to GitHub -->
       <div class="gallery-grid">
-        <div class="polaroid-card float-slow" onclick="openLightbox('p1.jpeg', 'Your radiant smile that lights up my universe 🌸')">
-          <div class="polaroid-img-wrapper">
-            <img src="p1.jpeg" alt="Memory 1" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-slow">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(255,126,179,0.12),rgba(192,132,252,0.12));">📸</div>
           <div class="polaroid-caption">My Favorite Smile 💖</div>
         </div>
-
-        <div class="polaroid-card float-medium" onclick="openLightbox('p2.jpeg', 'Pure magic in every quiet moment with you ✨')">
-          <div class="polaroid-img-wrapper">
-            <img src="p2.jpeg" alt="Memory 2" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-medium">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(255,126,179,0.12));">🌸</div>
           <div class="polaroid-caption">Cosmic Joy 🪐</div>
         </div>
-
-        <div class="polaroid-card float-fast" onclick="openLightbox('p3.jpeg', 'The sweetest soul in the entire universe 🥺')">
-          <div class="polaroid-img-wrapper">
-            <img src="p3.jpeg" alt="Memory 3" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-fast">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(255,126,179,0.12),rgba(192,132,252,0.12));">🥺</div>
           <div class="polaroid-caption">My Dearest Puntu 💕</div>
         </div>
-
-        <div class="polaroid-card float-slow" onclick="openLightbox('p4.jpeg', 'Endless laughter and sweet warmth ☀️')">
-          <div class="polaroid-img-wrapper">
-            <img src="p4.jpeg" alt="Memory 4" class="polaroid-img">
-          </div>
-          <div class="polaroid-caption">Warmth & Sunshine 👑</div>
+        <div class="polaroid-card float-slow">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(255,126,179,0.12));">☀️</div>
+          <div class="polaroid-caption">Warmth &amp; Sunshine 👑</div>
         </div>
-
-        <div class="polaroid-card float-medium" onclick="openLightbox('p5.jpeg', 'Forever anchored to your loving heart ⚓')">
-          <div class="polaroid-img-wrapper">
-            <img src="p5.jpeg" alt="Memory 5" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-medium">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(255,126,179,0.12),rgba(192,132,252,0.12));">💫</div>
           <div class="polaroid-caption">My Mayalu 🌸</div>
         </div>
-
-        <div class="polaroid-card float-fast" onclick="openLightbox('p6.jpeg', 'Every picture tells a love story starring you ✨')">
-          <div class="polaroid-img-wrapper">
-            <img src="p6.jpeg" alt="Memory 6" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-fast">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(255,126,179,0.12));">🌙</div>
           <div class="polaroid-caption">Timeless Beauty 🌙</div>
         </div>
-
-        <div class="polaroid-card float-slow" onclick="openLightbox('pic7.jpeg', 'Another beautiful memory of my Ayuu 💖')">
-          <div class="polaroid-img-wrapper">
-            <img src="pic7.jpeg" alt="Memory 7" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-slow">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(255,126,179,0.12),rgba(192,132,252,0.12));">✨</div>
           <div class="polaroid-caption">Beautiful Moments ✨</div>
         </div>
-
-        <div class="polaroid-card float-medium" onclick="openLightbox('pic8.jpeg', 'A precious moment captured in our universe 🌸')">
-          <div class="polaroid-img-wrapper">
-            <img src="pic8.jpeg" alt="Memory 8" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-medium">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(255,126,179,0.12));">🪐</div>
           <div class="polaroid-caption">Our Little Universe 🪐</div>
         </div>
-
-        <div class="polaroid-card float-fast" onclick="openLightbox('pic9.jpeg', 'Forever one of my favorite memories with you ❤️')">
-          <div class="polaroid-img-wrapper">
-            <img src="pic9.jpeg" alt="Memory 9" class="polaroid-img">
-          </div>
+        <div class="polaroid-card float-fast">
+          <div class="polaroid-img-wrapper" style="display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,rgba(255,126,179,0.12),rgba(192,132,252,0.12));">❤️</div>
           <div class="polaroid-caption">Forever Favorite ❤️</div>
         </div>
       </div>
@@ -294,7 +403,7 @@
             <p class="video-subtitle">Press play to relive our favorite moving memory</p>
           </div>
           <div class="video-wrapper">
-            <video controls poster="p1.jpeg">
+            <video controls>
               <source src="v1.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
@@ -309,27 +418,23 @@
         <h2 class="section-title gradient-text">Constellation of Love ✨</h2>
         <p class="section-subtitle">Click the glowing stars to reveal secret notes</p>
       </div>
-
       <div class="reasons-grid">
-        <div class="glass-card reason-card float-slow" onclick="revealReason(this, 'Reason #1', 'The gentle way you smile whenever our eyes meet. It instantly melts away any worry.')">
+        <div class="glass-card reason-card float-slow" onclick="revealReason(this,'Reason #1','The gentle way you smile whenever our eyes meet. It instantly melts away any worry.')">
           <div class="reason-star">⭐</div>
           <div class="reason-title">Your Gentle Smile</div>
           <div class="reason-desc">Tap to reveal secret note</div>
         </div>
-
-        <div class="glass-card reason-card float-medium" onclick="revealReason(this, 'Reason #2', 'How you call me with so much warmth in your voice—making every ordinary day feel extraordinary.')">
+        <div class="glass-card reason-card float-medium" onclick="revealReason(this,'Reason #2','How you call me with so much warmth in your voice—making every ordinary day feel extraordinary.')">
           <div class="reason-star">🌟</div>
           <div class="reason-title">Your Sweet Voice</div>
           <div class="reason-desc">Tap to reveal secret note</div>
         </div>
-
-        <div class="glass-card reason-card float-fast" onclick="revealReason(this, 'Reason #3', 'Your kind and loving heart that cares so deeply for everyone around you.')">
+        <div class="glass-card reason-card float-fast" onclick="revealReason(this,'Reason #3','Your kind and loving heart that cares so deeply for everyone around you.')">
           <div class="reason-star">✨</div>
           <div class="reason-title">Your Loving Heart</div>
           <div class="reason-desc">Tap to reveal secret note</div>
         </div>
-
-        <div class="glass-card reason-card float-slow" onclick="revealReason(this, 'Reason #4', 'Timi sadhai bhari mero man ma—floating in life with you feels completely weightless.')">
+        <div class="glass-card reason-card float-slow" onclick="revealReason(this,'Reason #4','Timi sadhai bhari mero man ma—floating in life with you feels completely weightless.')">
           <div class="reason-star">💫</div>
           <div class="reason-title">Timi Sadhai Bhari</div>
           <div class="reason-desc">Tap to reveal secret note</div>
@@ -344,16 +449,13 @@
           <h2 class="section-title gradient-text">Make a Birthday Wish 🎂</h2>
           <p class="section-subtitle">Click the cake to blow out the candle!</p>
         </div>
-
         <div class="interactive-cake" id="cakeWidget" onclick="blowCandle()">
           <span class="flame" id="candleFlame">🔥</span>
           🎂
         </div>
-
         <div class="wish-result" id="wishResult">
           ✨ Your wish has been sent straight to the stars! May all your dreams come true, my love! Timi sadhai bhari 💖
         </div>
-
         <button class="btn-cosmic" onclick="blowCandle()">
           <span>Blow Out Candle 🕯️</span>
         </button>
@@ -363,12 +465,8 @@
     <!-- FOOTER -->
     <footer class="footer">
       <p class="footer-text">Timi sadhai bhari mero matrai. Handcrafted with endless love for <strong>Ayuu</strong> (Puntu / Mayalu)</p>
-      <div class="footer-heart">
-        <span class="pulse-heart">❤️</span>
-      </div>
-      <p class="footer-text" style="font-size: 0.9rem; color: var(--text-40);">
-        Floating in space & time, forever and always.
-      </p>
+      <div class="footer-heart"><span class="pulse-heart">❤️</span></div>
+      <p class="footer-text" style="font-size:0.9rem;color:var(--text-40);">Floating in space &amp; time, forever and always.</p>
     </footer>
 
   </div>
@@ -382,9 +480,7 @@
     </div>
   </div>
 
-  <!-- YouTube IFrame API Script -->
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <!-- Main Application Script -->
-  <script src="index.js"></script>
+  <!-- Main script (versioned, no YouTube API) -->
+  <script src="index.js?v=20260810"></script>
 </body>
 </html>
