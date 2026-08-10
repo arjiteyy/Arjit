@@ -48,43 +48,27 @@ function initAudioEngine() {
   audio.addEventListener('waiting', () => updateSubtitle('Buffering…'));
   audio.addEventListener('playing', () => updateSubtitle('Now playing 🎵'));
 
-  /* ── Desktop: attempt autoplay (muted first, then unmute) ── */
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (!isMobile) {
-    console.log('[Birthday] Desktop detected — attempting muted autoplay');
-    audio.muted = true;
-    const ap = audio.play();
-    if (ap !== undefined) {
-      ap.then(() => {
-        // Muted autoplay worked — unmute after 800 ms
-        setTimeout(() => {
-          audio.muted = false;
-          console.log('[Birthday] Desktop autoplay unmuted ✅');
-        }, 800);
-      }).catch(err => {
-        console.log('[Birthday] Desktop autoplay blocked, waiting for user tap:', err.message);
-        audio.muted = false;
-      });
-    }
-  } else {
-    console.log('[Birthday] Mobile detected — waiting for user tap');
-  }
+  /* ── Attempt direct play ── */
+  audio.muted = false;
+  audio.play().then(() => {
+    console.log('[Birthday] Autoplay succeeded ✅');
+  }).catch(err => {
+    console.log('[Birthday] Autoplay blocked by browser policy — waiting for tap:', err.message);
+  });
 
-  /* ── Any user gesture on the page will try to start audio ── */
-  const gestureStart = () => {
-    if (!isPlaying && audio.paused) {
-      console.log('[Birthday] Gesture detected — attempting to play');
+  /* ── Unlock audio immediately on any tap, click, or gesture ── */
+  const unlockAudio = () => {
+    if (audio && audio.paused) {
       audio.muted = false;
-      audio.play().catch(e => console.log('[Birthday] Play on gesture failed:', e.message));
-    }
-    // Once started, remove the broad listeners (keep only intentional button taps)
-    if (isPlaying) {
-      document.removeEventListener('touchstart', gestureStart);
-      document.removeEventListener('click',      gestureStart);
+      audio.play().then(() => {
+        console.log('[Birthday] Audio unlocked on gesture ✅');
+      }).catch(e => console.log('[Birthday] Play on gesture failed:', e.message));
     }
   };
-  document.addEventListener('touchstart', gestureStart, { passive: true });
-  document.addEventListener('click',      gestureStart,  { passive: true });
+
+  document.addEventListener('touchstart',  unlockAudio, { passive: true });
+  document.addEventListener('click',       unlockAudio, { passive: true });
+  document.addEventListener('pointerdown', unlockAudio, { passive: true });
 
   console.log('[Birthday] Audio engine ready');
 }

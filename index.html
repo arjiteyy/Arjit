@@ -208,11 +208,12 @@
        HTML5 AUDIO ELEMENT  –  put your MP3 file named "music.mp3"
        in the same folder as index.html, then push to GitHub.
        ===================================================================== -->
-  <audio id="bgAudio" loop preload="auto">
+  <audio id="bgAudio" loop preload="auto" playsinline>
+    <source src="music.m4a" type="audio/mp4">
     <source src="music.mp3" type="audio/mpeg">
-    <source src="music.ogg" type="audio/ogg">
-    <!-- Fallback message (never seen, element is hidden) -->
-    Your browser does not support HTML5 audio.
+    <source src="Timi%20Sadhai%20Bhari.mp4" type="audio/mp4">
+    <!-- Fallback message -->
+    Your browser does not support HTML5 media.
   </audio>
 
   <!-- Background Space Canvas -->
